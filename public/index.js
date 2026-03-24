@@ -14,37 +14,59 @@ fetchTodos().then((todos) => {
   console.log(todos);
 });
 
-async function renderTodos(todos) {
+function renderTodos(todos) {
   // clear existing todos
   todoList.innerHTML = "";
-
-
 
   todos.forEach((todo) => {
     // create element
     const li = document.createElement("li");
-    // set text
-    li.textContent = todo.text;
-
+    const span = document.createElement("span");
     const deleteTodo = document.createElement("button");
-    deleteTodo.textContent = "Delete";
+    const toggleBtn = document.createElement("button");
 
+    // set text
+    span.textContent = todo.text;
+    deleteTodo.textContent = "Delete"
+
+    // set toggle button text
+    if(todo.done) {
+        toggleBtn.textContent = "Undo";
+    } else {
+        toggleBtn.textContent = "Done";
+    }
+    
+    // toggle handler
+    toggleBtn.addEventListener("click", async () => {
+        await fetch(`/api/todos/${todo._id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ done: !todo.done })
+        });
+        await loadTodos();
+    });
+
+    // delete handler
     deleteTodo.addEventListener("click", async () => {
         await fetch(`/api/todos/${todo._id}`, {
         method: "DELETE"
     });
 
     await loadTodos();
-})
-
-    // mark as done if completed
+});
+    // mark as done
     if (todo.done) {
       li.classList.add("completed");
     }
 
     // add to DOM
-    todoList.appendChild(li);
+    li.append(span);
     li.append(deleteTodo);
+    li.append(toggleBtn);
+
+    todoList.append(li);
   });
 };
 
@@ -53,8 +75,6 @@ async function loadTodos() {
     const todos = await fetchTodos();
     renderTodos(todos);
 }
-
-loadTodos();
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -73,4 +93,4 @@ form.addEventListener("submit", async (e) => {
     todoInput.value = "";
     await loadTodos();
 });
-
+loadTodos();
