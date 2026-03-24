@@ -18,12 +18,24 @@ async function renderTodos(todos) {
   // clear existing todos
   todoList.innerHTML = "";
 
+
+
   todos.forEach((todo) => {
     // create element
     const li = document.createElement("li");
-
     // set text
     li.textContent = todo.text;
+
+    const deleteTodo = document.createElement("button");
+    deleteTodo.textContent = "Delete";
+
+    deleteTodo.addEventListener("click", async () => {
+        await fetch(`/api/todos/${todo._id}`, {
+        method: "DELETE"
+    });
+
+    await loadTodos();
+})
 
     // mark as done if completed
     if (todo.done) {
@@ -32,13 +44,16 @@ async function renderTodos(todos) {
 
     // add to DOM
     todoList.appendChild(li);
+    li.append(deleteTodo);
   });
 };
+
 
 async function loadTodos() {
     const todos = await fetchTodos();
     renderTodos(todos);
 }
+
 loadTodos();
 
 form.addEventListener("submit", async (e) => {
@@ -58,3 +73,4 @@ form.addEventListener("submit", async (e) => {
     todoInput.value = "";
     await loadTodos();
 });
+
