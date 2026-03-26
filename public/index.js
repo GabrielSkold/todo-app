@@ -26,13 +26,16 @@ function renderTodos(todos) {
         deleteTodo.classList.add("btn", "delete-button");
         const toggleBtn = document.createElement("button");
         toggleBtn.classList.add("btn", "toggle-button");
+        const editButton = document.createElement("button");
+        editButton.classList.add("btn", "edit-button")
         const btnContainer = document.createElement("div");
         btnContainer.classList.add("button-group");
 
         // set text
         span.textContent = todo.text;
         deleteTodo.textContent = "Delete"
-
+        editButton.textContent = "Edit"
+        
     // set toggle button text
     if(todo.done) {
         toggleBtn.textContent = "Undo";
@@ -52,6 +55,34 @@ function renderTodos(todos) {
         await loadTodos();
     });
 
+    let editInput;
+
+    editButton.addEventListener("click", async () => {
+
+        if(editButton.textContent === "Edit") {
+            editInput = document.createElement("input");
+            editInput.classList.add("edit-input");
+            editInput.value = todo.text;
+            editInput.focus();
+            li.replaceChild(editInput, span);
+            editButton.textContent = "Save"
+
+        }  else if(editButton.textContent === "Save") {
+            const newText = editInput.value.trim();
+            if(!newText) {
+                return;
+            }
+            await fetch(`/api/todos/${todo._id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ text: newText })
+        });
+        await loadTodos();
+        }
+    })
+
     // delete handler
     deleteTodo.addEventListener("click", async () => {
         await fetch(`/api/todos/${todo._id}`, {
@@ -66,7 +97,7 @@ function renderTodos(todos) {
     }
 
     // add to DOM
-    btnContainer.append(toggleBtn, deleteTodo);
+    btnContainer.append(toggleBtn, editButton, deleteTodo );
     li.append(span);
     li.append(btnContainer);
     todoList.append(li);
