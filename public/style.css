@@ -1,4 +1,4 @@
-body {
+/* body {
     font-family: system-ui, sans-serif; 
     background: #f6f6f6; 
     margin: 0; 
@@ -28,4 +28,46 @@ li {
     justify-content: space-between; 
     padding: 8px 0; 
     border-bottom: 1px solid #eee; 
+} */
+
+.todo-list li{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 0;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #eeeeeecf;
+    background-color: #eeeeeecf;
+}
+
+.todo-list span {
+    flex: 1;
+}
+
+.button-group {
+    display: flex;
+    gap: 8px;
+}
+
+.btn {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: bisque;
+}
+
+.delete-button {
+    background-color: red;
+    color: white;
+}
+
+.toggle-button {
+    background-color: green;
+    color: white;
 }

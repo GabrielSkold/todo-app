@@ -15,19 +15,23 @@ fetchTodos().then((todos) => {
 });
 
 function renderTodos(todos) {
-  // clear existing todos
-  todoList.innerHTML = "";
+    // clear existing todos
+    todoList.innerHTML = "";
 
-  todos.forEach((todo) => {
-    // create element
-    const li = document.createElement("li");
-    const span = document.createElement("span");
-    const deleteTodo = document.createElement("button");
-    const toggleBtn = document.createElement("button");
+    todos.forEach((todo) => {
+        // create element
+        const li = document.createElement("li");
+        const span = document.createElement("span");
+        const deleteTodo = document.createElement("button");
+        deleteTodo.classList.add("btn", "delete-button");
+        const toggleBtn = document.createElement("button");
+        toggleBtn.classList.add("btn", "toggle-button");
+        const btnContainer = document.createElement("div");
+        btnContainer.classList.add("button-group");
 
-    // set text
-    span.textContent = todo.text;
-    deleteTodo.textContent = "Delete"
+        // set text
+        span.textContent = todo.text;
+        deleteTodo.textContent = "Delete"
 
     // set toggle button text
     if(todo.done) {
@@ -58,16 +62,15 @@ function renderTodos(todos) {
 });
     // mark as done
     if (todo.done) {
-      li.classList.add("completed");
+        li.classList.add("completed");
     }
 
     // add to DOM
+    btnContainer.append(toggleBtn, deleteTodo);
     li.append(span);
-    li.append(deleteTodo);
-    li.append(toggleBtn);
-
+    li.append(btnContainer);
     todoList.append(li);
-  });
+    });
 };
 
 
